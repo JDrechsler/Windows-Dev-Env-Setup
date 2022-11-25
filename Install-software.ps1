@@ -40,6 +40,9 @@ Measure-Command {
     git config --global core.editor "code --wait"
     git config --global init.defaultBranch main
 
+    # Python
+    choco install python
+
     # Windows Terminal
     choco install microsoft-windows-terminal
     choco install cascadia-code-nerd-font
@@ -64,6 +67,7 @@ Measure-Command {
 
     # Docker / Podman
     choco install podman-desktop
+    pip3 install https://github.com/containers/podman-compose/archive/devel.tar.gz
 
     # DB
     choco install dbeaver
