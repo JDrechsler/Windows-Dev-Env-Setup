@@ -29,6 +29,10 @@ Measure-Command {
     choco install awscli
     choco install 7zip
 
+    # Browsers
+    choco install googlechrome
+    choco install firefox-dev --pre 
+
     #
     # Git
     #
