@@ -59,9 +59,6 @@ Measure-Command {
     # Java JDK
     choco install microsoft-openjdk
 
-    choco install microsoft-windows-terminal
-    choco install cascadia-code-nerd-font
-
     # WSL
     wsl --install
 
@@ -71,6 +68,7 @@ Measure-Command {
 
     # DB
     choco install dbeaver
+    choco install postgresql --params '/Password:password' --paramsglobal
 
     # HyperV
     Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
