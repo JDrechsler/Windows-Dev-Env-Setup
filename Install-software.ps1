@@ -14,6 +14,11 @@ Measure-Command {
     New-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders' Personal -Value "C:\Users\$user" -Type ExpandString -Force
 
     #
+    # Set powershell script execution policy
+    #
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+    #
     # Package Managers
     #
 
@@ -56,12 +61,14 @@ Measure-Command {
 
     # NodeJS
     choco install nodejs-lts
+    refreshenv 
 
     # GLobal NPM packages
     npm install -g cross-env
 
     # Java JDK
     choco install microsoft-openjdk
+    refreshenv
 
     # WSL
     wsl --install
