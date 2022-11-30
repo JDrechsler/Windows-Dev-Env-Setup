@@ -7,11 +7,33 @@ Measure-Command {
     # Variables
     #
     $user = 'qxz0rmr'
+    $pathNewPSProfileScript = ".\Microsoft.PowerShell_profile.ps1"
+    $pathProfileWindowsPowerShell = "C:\Users\$user\Documents\WindowsPowerShell"
+    $pathProfilePowerShell = "C:\Users\$user\Documents\PowerShell"
 
     #
-    # Set personal path
+    # Importants
+    #
+    Make sure onedrive is not syncing or using system folders
+
+    # Windows folders and settings
+    # Show file extensions
+    # Show hidden files
+    # Show hidden folders
+    # Set view to details
+    # Apply to all folders
+    # TODO: automate through PS
+
+    #
+    # Set personal paths
     #
     New-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders' Personal -Value "C:\Users\$user" -Type ExpandString -Force
+    New-Item -ItemType Directory -Force -Path "c:\users\${user}\documents\gits\bitbucket\FMS"
+    New-Item -ItemType Directory -Force -Path "c:\users\${user}\documents\gits\github"
+
+    $o = new-object -com shell.application
+    $o.Namespace("c:\users\${user}\documents\gits\github").Self.InvokeVerb("pintohome") 
+    $o.Namespace("c:\users\${user}\documents").Self.InvokeVerb("pintohome") 
 
     #
     # Set powershell script execution policy
@@ -54,12 +76,24 @@ Measure-Command {
 
     # Windows Terminal
     choco install powershell-core
-    # needed for terminal https://aka.ms/Microsoft.VCLibs.x86.14.00.Desktop.appx
-    # needed for terminal https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx
-    choco install microsoft-windows-terminal 
+    add-appxpackage "./Dependencies/Microsoft.VCLibs.x64.14.00.Desktop.appx" # needed for terminal https://aka.ms/Microsoft.VCLibs.x86.14.00.Desktop.appx
+    add-appxpackage "./Dependencies/Microsoft.VCLibs.x86.14.00.Desktop.appx" # needed for terminal https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx
+    choco install microsoft-windows-terminal --pre 
+    # install manually if automatic fails
+    # dism.exe /online /Add-ProvisionedAppxPackage /PackagePath:"C:\ProgramData\chocolatey\lib-bad\microsoft-windows-terminal\tools\Microsoft.WindowsTerminal_Win10_1.15.2874.0_8wekyb3d8bbwe.msixbundle" /SkipLicense
     choco install cascadia-code-nerd-font
     choco install oh-my-posh
     choco install poshgit
+
+    # Copy PS profiles
+    # Default PS profile
+    New-Item -ItemType Directory -Force -Path $pathProfileWindowsPowerShell
+    New-Item -ItemType Directory -Force -Path $pathProfilePowerShell
+    Copy-Item -Path $pathNewPSProfileScript -Destination "$pathProfileWindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Force  
+    # Default PS 7 profile
+    Copy-Item -Path $pathNewPSProfileScript -Destination "$pathProfilePowerShell\Microsoft.PowerShell_profile.ps1" -Force
+    # Default PS VS Code Profile
+    Copy-Item -Path $pathNewPSProfileScript -Destination "$pathProfilePowerShell\Microsoft.VSCode_profile.ps1" -Force
 
     # NodeJS
     choco install nodejs-lts
@@ -85,15 +119,4 @@ Measure-Command {
 
     # HyperV
     Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
-
-    # Windows folders and settings
-    Set-Itemproperty -path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'HideFileExt' -value 0
-    Set-Itemproperty -path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'Hidden' -value 1
-
-    New-Item -ItemType Directory -Force -Path "c:\users\${user}\documents\gits\bitbucket\FMS"
-    New-Item -ItemType Directory -Force -Path "c:\users\${user}\documents\gits\github"
-
-    $o = new-object -com shell.application
-    $o.Namespace("c:\users\${user}\documents\gits\github").Self.InvokeVerb("pintohome") 
-    $o.Namespace("c:\users\${user}\documents").Self.InvokeVerb("pintohome") 
 }
