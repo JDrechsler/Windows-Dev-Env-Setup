@@ -3,22 +3,16 @@ Measure-Command {
     # Author: Johannes Drechsler
     #
 
-    #
     # Variables
-    #
     $user = 'qxz0rmr'
     $pathNewPSProfileScript = ".\Microsoft.PowerShell_profile.ps1"
     $pathProfileWindowsPowerShell = "C:\Users\$user\Documents\WindowsPowerShell"
     $pathProfilePowerShell = "C:\Users\$user\Documents\PowerShell"
 
-    #
     # Set powershell script execution policy
-    #
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
-    #
     # Importants
-    #
     Make sure onedrive is not syncing or using system folders
 
     # Windows folders and settings
@@ -29,9 +23,7 @@ Measure-Command {
     # Apply to all folders
     # TODO: automate through PS
 
-    #
     # Set personal paths
-    #
     New-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders' Personal -Value "C:\Users\$user" -Type ExpandString -Force
     New-Item -ItemType Directory -Force -Path "c:\users\${user}\documents\gits\bitbucket\FMS"
     New-Item -ItemType Directory -Force -Path "c:\users\${user}\documents\gits\github"
@@ -76,9 +68,7 @@ Measure-Command {
     choco install googlechrome
     choco install firefox-dev --pre 
 
-    #
     # Git
-    #
     choco install git --yes --params '/GitAndUnixToolsOnPath'
     choco install tortoisegit --yes
     refreshpath
