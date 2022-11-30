@@ -8,6 +8,7 @@ Measure-Command {
     $pathNewPSProfileScript = ".\Microsoft.PowerShell_profile.ps1"
     $pathProfileWindowsPowerShell = "C:\Users\$user\Documents\WindowsPowerShell"
     $pathProfilePowerShell = "C:\Users\$user\Documents\PowerShell"
+    $pathProfileAdminPowerShell = "C:\Users\$user\PowerShell"
 
     # Set powershell script execution policy
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
@@ -29,6 +30,7 @@ Measure-Command {
     New-Item -ItemType Directory -Force -Path "c:\users\${user}\documents\gits\github"
     New-Item -ItemType Directory -Force -Path $pathProfileWindowsPowerShell
     New-Item -ItemType Directory -Force -Path $pathProfilePowerShell
+    New-Item -ItemType Directory -Force -Path $pathProfileAdminPowerShell
     $o = new-object -com shell.application
     $o.Namespace("c:\users\${user}\documents\gits\github").Self.InvokeVerb("pintohome") 
     $o.Namespace("c:\users\${user}\documents").Self.InvokeVerb("pintohome") 
@@ -36,6 +38,7 @@ Measure-Command {
     # Copy PS profiles
     Copy-Item -Path $pathNewPSProfileScript -Destination "$pathProfileWindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Force  
     Copy-Item -Path $pathNewPSProfileScript -Destination "$pathProfilePowerShell\Microsoft.PowerShell_profile.ps1" -Force
+    Copy-Item -Path $pathNewPSProfileScript -Destination "$pathProfileAdminPowerShell\Microsoft.PowerShell_profile.ps1" -Force
     Copy-Item -Path $pathNewPSProfileScript -Destination "$pathProfilePowerShell\Microsoft.VSCode_profile.ps1" -Force
 
     # Choco
