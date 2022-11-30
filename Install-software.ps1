@@ -30,7 +30,6 @@ Measure-Command {
     New-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders' Personal -Value "C:\Users\$user" -Type ExpandString -Force
     New-Item -ItemType Directory -Force -Path "c:\users\${user}\documents\gits\bitbucket\FMS"
     New-Item -ItemType Directory -Force -Path "c:\users\${user}\documents\gits\github"
-
     $o = new-object -com shell.application
     $o.Namespace("c:\users\${user}\documents\gits\github").Self.InvokeVerb("pintohome") 
     $o.Namespace("c:\users\${user}\documents").Self.InvokeVerb("pintohome") 
@@ -39,10 +38,6 @@ Measure-Command {
     # Set powershell script execution policy
     #
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-
-    #
-    # Package Managers
-    #
 
     # Choco
     Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
@@ -86,18 +81,14 @@ Measure-Command {
     #
     # Git
     #
-
     choco install git --yes --params '/GitAndUnixToolsOnPath'
     choco install tortoisegit --yes
     refreshenv
-
     git config --global core.editor "code --wait"
     git config --global init.defaultBranch main
 
     # Python
     choco install python
-
-    
 
     # NodeJS
     choco install nodejs-lts
