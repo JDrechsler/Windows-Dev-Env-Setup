@@ -12,6 +12,11 @@ Measure-Command {
     $pathProfilePowerShell = "C:\Users\$user\Documents\PowerShell"
 
     #
+    # Set powershell script execution policy
+    #
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+    #
     # Importants
     #
     Make sure onedrive is not syncing or using system folders
@@ -30,18 +35,21 @@ Measure-Command {
     New-ItemProperty 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders' Personal -Value "C:\Users\$user" -Type ExpandString -Force
     New-Item -ItemType Directory -Force -Path "c:\users\${user}\documents\gits\bitbucket\FMS"
     New-Item -ItemType Directory -Force -Path "c:\users\${user}\documents\gits\github"
+    New-Item -ItemType Directory -Force -Path $pathProfileWindowsPowerShell
+    New-Item -ItemType Directory -Force -Path $pathProfilePowerShell
     $o = new-object -com shell.application
     $o.Namespace("c:\users\${user}\documents\gits\github").Self.InvokeVerb("pintohome") 
     $o.Namespace("c:\users\${user}\documents").Self.InvokeVerb("pintohome") 
 
-    #
-    # Set powershell script execution policy
-    #
-    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+    # Copy PS profiles
+    Copy-Item -Path $pathNewPSProfileScript -Destination "$pathProfileWindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Force  
+    Copy-Item -Path $pathNewPSProfileScript -Destination "$pathProfilePowerShell\Microsoft.PowerShell_profile.ps1" -Force
+    Copy-Item -Path $pathNewPSProfileScript -Destination "$pathProfilePowerShell\Microsoft.VSCode_profile.ps1" -Force
 
     # Choco
-    Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-    refreshenv
+    Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; 
+    Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+    refreshpath
     choco feature enable -n allowGlobalConfirmation
 
     # Install terminal packages
@@ -56,16 +64,6 @@ Measure-Command {
     choco install microsoft-windows-terminal --pre 
     # install manually if automatic fails
     # dism.exe /online /Add-ProvisionedAppxPackage /PackagePath:"C:\ProgramData\chocolatey\lib-bad\microsoft-windows-terminal\tools\Microsoft.WindowsTerminal_Win10_1.15.2874.0_8wekyb3d8bbwe.msixbundle" /SkipLicense
-
-    # Copy PS profiles
-    # Default PS profile
-    New-Item -ItemType Directory -Force -Path $pathProfileWindowsPowerShell
-    New-Item -ItemType Directory -Force -Path $pathProfilePowerShell
-    Copy-Item -Path $pathNewPSProfileScript -Destination "$pathProfileWindowsPowerShell\Microsoft.PowerShell_profile.ps1" -Force  
-    # Default PS 7 profile
-    Copy-Item -Path $pathNewPSProfileScript -Destination "$pathProfilePowerShell\Microsoft.PowerShell_profile.ps1" -Force
-    # Default PS VS Code Profile
-    Copy-Item -Path $pathNewPSProfileScript -Destination "$pathProfilePowerShell\Microsoft.VSCode_profile.ps1" -Force
 
     # Utils
     choco install everything
@@ -83,7 +81,7 @@ Measure-Command {
     #
     choco install git --yes --params '/GitAndUnixToolsOnPath'
     choco install tortoisegit --yes
-    refreshenv
+    refreshpath
     git config --global core.editor "code --wait"
     git config --global init.defaultBranch main
 
@@ -92,14 +90,14 @@ Measure-Command {
 
     # NodeJS
     choco install nodejs-lts
-    refreshenv 
+    refreshpath
 
     # GLobal NPM packages
     npm install -g cross-env
 
     # Java JDK
     choco install microsoft-openjdk
-    refreshenv
+    refreshpath
 
     # WSL
     wsl --install
