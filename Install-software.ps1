@@ -53,11 +53,13 @@ Measure-Command {
     choco install python
 
     # Windows Terminal
-    choco install microsoft-windows-terminal
+    choco install powershell-core
+    # needed for terminal https://aka.ms/Microsoft.VCLibs.x86.14.00.Desktop.appx
+    # needed for terminal https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx
+    choco install microsoft-windows-terminal 
     choco install cascadia-code-nerd-font
     choco install oh-my-posh
     choco install poshgit
-    choco install powershell-core
 
     # NodeJS
     choco install nodejs-lts
