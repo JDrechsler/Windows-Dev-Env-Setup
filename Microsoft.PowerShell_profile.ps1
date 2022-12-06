@@ -13,7 +13,22 @@ function gitFetch {
     git fetch
 }
 
+function gitShowMergeBase() {
+    git merge-base develop $(git branch --show-current)
+}
+
+function softResetMergeBase() {
+    git reset --soft $(gitShowMergeBase)
+}
+
+function softResetLastCommit() {
+    git reset --soft HEAD~1
+}
+
 Set-Alias gs gitStatus
 Set-Alias s gitStatus
 Set-Alias g gitStatus
 Set-Alias f gitFetch
+Set-Alias show-merge-base gitShowMergeBase
+Set-Alias soft-reset-merge-base softResetMergeBase
+Set-Alias soft-reset-last-commit softResetLastCommit
